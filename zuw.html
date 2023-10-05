@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latające Okna Przeglądarki</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        .card {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const imageSources = ["z1.png", "z2.png", "z3.png", "z4.png", "z5.png"];
+        const windows = [];
+
+        function getRandomPosition() {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 150);
+            return { x, y };
+        }
+
+        function createCardWindow(imageSrc) {
+            const position = getRandomPosition();
+            const newWindow = window.open("", "_blank", "width=100,height=150,left=" + position.x + ",top=" + position.y);
+            windows.push(newWindow);
+
+            newWindow.document.body.style.margin = "0";
+            newWindow.document.body.style.overflow = "hidden";
+
+            const card = newWindow.document.createElement("div");
+            card.className = "card";
+            const img = newWindow.document.createElement("img");
+            img.src = imageSrc;
+            img.style.width = "100%";
+            img.style.height = "100%";
+            card.appendChild(img);
+            newWindow.document.body.appendChild(card);
+
+            moveWindow(newWindow);
+        }
+
+        function moveWindow(window) {
+            const position = getRandomPosition();
+            window.moveTo(position.x, position.y);
+
+            setTimeout(() => {
+                moveWindow(window);
+            }, 500); // Przesuń okno co 0.5 sekundy
+        }
+
+        // Otwórz pięć osobnych okien przeglądarki na początek
+        for (let i = 0; i < 5; i++) {
+            if (imageSources.length > i) {
+                createCardWindow(imageSources[i]);
+            }
+        }
+    </script>
+</body>
+</html>
